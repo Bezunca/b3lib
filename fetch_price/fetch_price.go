@@ -1,4 +1,4 @@
-package b3lib
+package fetch_price
 
 import (
 	"encoding/json"
