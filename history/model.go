@@ -35,3 +35,22 @@ type AssetInfo struct {
 	ISINCode               string     `json:"-" bson:"-"`
 	DistributionNumber     int        `json:"-" bson:"-"`
 }
+
+type Price struct {
+	Year                   int        `json:"year" bson:"year"`
+	DataCollectionDate     time.Time  `json:"data" bson:"date"`
+	Ticker                 string     `json:"ticker" bson:"ticker"`
+	FutureMarketExpiration string     `json:" future_market_expiration" bson:" future_market_expiration"` // Need to check this against an example that actually has a value
+	PriceClose             FixedPoint `json:"price_close" bson:"price_close"`
+	TotalVolume            FixedPoint `json:"total_volume" bson:"total_volume"`
+	PreExe                 FixedPoint `json:"execution_price" bson:"execution_price"` // Needs further investigation
+	ExpirationDate         time.Time  `json:"expiration_date" bson:"expiration_date"`
+}
+
+type Asset struct {
+	Ticker       string `json:"ticker" bson:"ticker"`
+	CompanyName  string `json:"shot_company_name" bson:"shot_company_name"`
+	MarketType   int    `json:"market_type" bson:"market_type"`
+	SecurityType string `json:"security_type" bson:"security_type"`
+	Currency     string `json:"currency" bson:"currency"`
+}

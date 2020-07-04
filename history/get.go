@@ -7,46 +7,46 @@ import (
 )
 
 // Get returns a list of infos for assets in B3
-func GetByYear(year uint) ([]AssetInfo, error) {
+func GetByYear(year uint) (map[string]*Asset, []Price, error) {
 	responseData, err := download(fmt.Sprintf("http://bvmf.bmfbovespa.com.br/InstDados/SerHist/COTAHIST_A%v.ZIP", year))
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	encodedContent, err := zip.ExtractFirstFile(responseData)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
-	data, err := parseHistoricDataFromBytes(encodedContent, int(year))
+	assets, prices, err := parseHistoricDataFromBytes(encodedContent, int(year))
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
-	return data, nil
+	return assets, prices, nil
 }
 
-func GetSpecificDay(day, month, year uint) ([]AssetInfo, error) {
+func GetSpecificDay(day, month, year uint) (map[string]*Asset, []Price, error) {
 	if day > 31 || day < 1 {
-		return nil, &DayOutOfRangeError{Day: day}
+		return nil, nil, &DayOutOfRangeError{Day: day}
 	}
 	if month > 12 || month < 1 {
-		return nil, &MonthOutOfRangeError{Month: month}
+		return nil, nil, &MonthOutOfRangeError{Month: month}
 	}
 	if year < 2000 {
-		return nil, &YearOutOfRangeError{Year: year}
+		return nil, nil, &YearOutOfRangeError{Year: year}
 	}
 
 	responseData, err := download(fmt.Sprintf("http://bvmf.bmfbovespa.com.br/InstDados/SerHist/COTAHIST_D%02d%02d%d.ZIP", day, month, year))
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	encodedContent, err := zip.ExtractFirstFile(responseData)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
-	data, err := parseHistoricDataFromBytes(encodedContent, int(year))
+	assets, prices, err := parseHistoricDataFromBytes(encodedContent, int(year))
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
-	return data, nil
+	return assets, prices, nil
 }
